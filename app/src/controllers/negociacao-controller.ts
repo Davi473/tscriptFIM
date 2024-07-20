@@ -1,3 +1,6 @@
+
+import { inspect } from "../decorators/inspect.js";
+import { logarTempoDeExecucao } from "../decorators/logar-tempo-de-execucao.js";
 import { DiaDaSemana } from "../enums/dias-da-semana.js";
 import { Negociacao } from "../models/negociacao.js";
 import { Negociacoes } from "../models/negociacoes.js";
@@ -10,7 +13,7 @@ export class NegociacaoController
   private inputQuantidade: HTMLInputElement;
   private inputValor: HTMLInputElement;
   private negociacoes = new Negociacoes();
-  private negociacoesView = new NegociacoesView("#negociacaoesView", true);
+  private negociacoesView = new NegociacoesView("#negociacaoesView");
   private mensagemView = new MensagemView("#mensagemView");
 
   constructor ()
@@ -22,6 +25,8 @@ export class NegociacaoController
     this.negociacoesView.update(this.negociacoes);
   }
 
+  @inspect
+  @logarTempoDeExecucao()
   public adiciona (): void
   {
     const  negociacao = Negociacao.criaDe(
@@ -33,6 +38,7 @@ export class NegociacaoController
     {
       this.mensagemView
           .update("Apenas negociações em dias úteis são aceitas");
+      return;
     }
 
     this.negociacoes.adiciona(negociacao);
